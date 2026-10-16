@@ -1,4 +1,4 @@
-from models import Course, ComputingProgram
+from classes import Course, ComputingProgram
 
 # curriculum framework for data sci
 datascience_major = ComputingProgram(
