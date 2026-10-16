@@ -10,7 +10,6 @@ datascience_major = ComputingProgram(
         "STAT 2000": Course("STAT 2000", "Introductory Statistics", 4, []),
         "CSCI 1301": Course("CSCI 1301", "Intro to Computing and Programming", 4, []),
         "CSCI 3360": Course("CSCI 3360", "Data Science & Applied Machine Learning I", 3, ["CSCI 1301", "MATH 2250"]),
-        "CSCI 3030": Course("CSCI 3030", "Computing, Ethics, and Society", 3, []),
         "CSCI 2610": Course("CSCI 2610", "Discrete Mathematics for Computer Science", 4, []),
         "CSCI 1302": Course("CSCI 1302", "Software Development", 4, ["CSCI 1301"]),
         "MATH 3300": Course("MATH 3300", "Applied Linear Algebra", 3, ["MATH 2260"]),
