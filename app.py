@@ -1,0 +1,89 @@
+import streamlit as st
+from data import PROGRAMS
+from classes import StudentPlanner
+
+st.set_page_config(page_title="Course Plan Visualizer", page_icon="🎓", layout="wide")
+
+st.title("UGA College of Computing Course Plan Visualizer!")
+st.markdown("Select your major, check off completed and active courses, and instantly track your path to graduation.")
+
+# program selector
+prog_name = st.selectbox("Select Program", list(PROGRAMS.keys()))
+program = PROGRAMS[prog_name]
+
+# initialize or reset planner state on program switch
+if "current_program" not in st.session_state or st.session_state.current_program != prog_name:
+    st.session_state.planner = StudentPlanner(program)
+    st.session_state.current_program = prog_name
+    st.session_state.comp_sel = []
+    st.session_state.enr_sel = []
+
+planner = st.session_state.planner
+all_codes = list(program.courses.keys())
+
+# user inputs
+col1, col2 = st.columns(2)
+with col1:
+    completed = st.multiselect("Courses Completed", all_codes, key="comp_sel")
+with col2:
+    available_for_enroll = []
+    for c in all_codes:
+      if c not in completed:
+        available_for_enroll.append(c)
+    enrolled = st.multiselect("Courses Currently Enrolled", available_for_enroll, key="enr_sel")
+
+# update planner state
+planner.update_status(completed, enrolled)
+
+st.divider()
+
+# metrics
+total_courses = len(program.courses)
+comp_count = len(completed)
+progress_pct = comp_count / total_courses if total_courses > 0 else 0
+
+st.subheader("📊 Degree Progress")
+st.progress(progress_pct)
+st.write(f"Completed **{comp_count}** of **{total_courses}** core program requirements ({progress_pct*100:.1f}%)")
+
+# tabs
+tab1, tab2, tab3 = st.tabs(["Remaining Courses", "Unlocked (Ready to Take)", "Full Catalog Status"])
+
+unlocked = planner.get_unlocked_remaining() # compute to reuse in tab1 + tab2
+unlocked_codes = set(unlocked.keys())
+
+with tab1:
+    st.subheader("Courses Left to Complete")
+    remaining = planner.get_remaining()
+    if not remaining:
+        st.success("🎉 You have completed all core courses in this degree program!")
+    else:
+        for code, course in remaining.items():
+            ready = code in unlocked_codes
+            status = "🟢 Ready to Enroll" if ready else "🔒 Locked (Missing Prereqs)"
+            st.markdown(f"**{code}: {course.name}** ({course.credits} credits) — *{status}*")
+            if course.prereqs:
+                missing = [p for p in course.prereqs if p not in planner.completed | planner.enrolled]
+                if missing:
+                    st.caption(f"Prerequisites: {', '.join(course.prereqs)} — missing: {', '.join(missing)}")
+                else:
+                    st.caption(f"Prerequisites: {', '.join(course.prereqs)}")
+
+with tab2:
+    st.subheader("Unlocked & Available Next Semester")
+    if not unlocked:
+        st.info("No core courses currently unlocked. Complete more prerequisites to unlock new classes.")
+    else:
+        for code, course in unlocked.items():
+            st.markdown(f"✅ **{code}: {course.name}** — *{course.credits} credits*")
+
+with tab3:
+    st.subheader("Complete Program Curriculum")
+    for code, course in program.courses.items():
+        if code in planner.completed:
+            state_label = "✅ Completed"
+        elif code in planner.enrolled:
+            state_label = "🟡 Enrolled"
+        else:
+            state_label = "⏳ Remaining"
+        st.write(f"- **{code}**: {course.name} — *{state_label}*")
