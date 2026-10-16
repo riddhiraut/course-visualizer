@@ -21,7 +21,7 @@ class StudentPlanner:
         self.completed: set[str] = set()
         self.enrolled: set[str] = set()
 
-    def update_status(self, completed: list[str], enrolled: list[str]):
+    def update_status(self, completed: Iterable[str], enrolled: Iterable[str]):
         self.completed = set(completed)
         self.enrolled = set(enrolled)
 
@@ -36,8 +36,9 @@ class StudentPlanner:
     # returns remaining courses whose prerequisites are fully met
     def get_unlocked_remaining(self) -> dict[str, Course]:
         remaining = self.get_remaining()
+        satisfied = self.completed | self.enrolled\
         unlocked_courses = {}
         for code, course in remaining.items():
-            if course.can_take(self.completed):
+            if course.can_take(satisfied):
                 unlocked_courses[code] = course
         return unlocked_courses
