@@ -1,3 +1,5 @@
+from typing import Iterable
+
 class Course:
     def __init__(self, code: str, name: str, credits: int, prereqs: list[str] = None):
         self.code = code
@@ -36,7 +38,7 @@ class StudentPlanner:
     # returns remaining courses whose prerequisites are fully met
     def get_unlocked_remaining(self) -> dict[str, Course]:
         remaining = self.get_remaining()
-        satisfied = self.completed | self.enrolled\
+        satisfied = self.completed | self.enrolled
         unlocked_courses = {}
         for code, course in remaining.items():
             if course.can_take(satisfied):
