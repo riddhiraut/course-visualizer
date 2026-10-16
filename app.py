@@ -28,8 +28,10 @@ with col1:
 with col2:
     available_for_enroll = []
     for c in all_codes:
-      if c not in completed:
-        available_for_enroll.append(c)
+        if c not in completed:
+            available_for_enroll.append(c)
+    if "enr_sel" in st.session_state: # remove stale selections BEFORE the widget renders
+        st.session_state.enr_sel = [c for c in st.session_state.enr_sel if c in available_for_enroll]
     enrolled = st.multiselect("Courses Currently Enrolled", available_for_enroll, key="enr_sel")
 
 # update planner state
