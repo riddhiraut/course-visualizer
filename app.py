@@ -4,8 +4,131 @@ from classes import StudentPlanner
 
 st.set_page_config(page_title="Course Plan Visualizer", page_icon="🎓", layout="wide")
 
-st.title("UGA College of Computing Course Plan Visualizer!")
-st.markdown("Select your major, check off completed and active courses, and instantly track your path to graduation.")
+st.markdown(
+    """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Merriweather+Sans:wght@400;600;700&family=Oswald:wght@300;500&display=swap');
+
+    /* page */
+    .stApp {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-family: 'Merriweather Sans', 'Georgia', serif !important;
+    }
+
+    /* content headings */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Oswald', 'Merriweather Sans', sans-serif !important;
+        color: #000000 !important;
+        letter-spacing: 0.02em;
+    }
+
+    h1 {
+        border-bottom: 3px solid #BA0C2F;
+        padding-bottom: 0.35rem;
+    }
+
+    /* Body text */
+    p, li, span, label, div[data-testid="stMarkdownContainer"] {
+        color: #000000 !important;
+    }
+
+    /* sidebar */
+    section[data-testid="stSidebar"] {
+        background-color: #F2F2F2 !important;
+        border-right: 1px solid #DEDEDE;
+    }
+
+    /* buttons */
+    .stButton > button {
+        background-color: #BA0C2F !important;
+        color: #FFFFFF !important;          
+        border: none !important;
+        border-radius: 4px !important;
+        font-family: 'Oswald', sans-serif !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.04em;
+        transition: background-color 0.2s ease;
+    }
+
+    .stButton > button:hover {
+        background-color: #E4002B !important;
+        color: #FFFFFF !important;
+    }
+
+    /* outline buttons */
+    .stButton > button[kind="secondary"] {
+        background-color: transparent !important;
+        color: #BA0C2F !important;
+        border: 1px solid #BA0C2F !important;
+    }
+
+    /* progress bar */
+    div[data-testid="stProgress"] > div > div > div {
+        background-color: #BA0C2F !important;
+    }
+
+    /* tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        border-bottom: 1px solid #DEDEDE;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        font-family: 'Oswald', sans-serif !important;
+        color: #666666 !important;            /* Dark Gray */
+        font-weight: 400;
+    }
+
+    .stTabs [aria-selected="true"] {
+        color: #BA0C2F !important;            /* active tab red */
+        border-bottom: 2px solid #BA0C2F !important;
+        font-weight: 500;
+    }
+
+    /* ---------- selectbox/input ---------- */
+    div[data-baseweb="select"] > div,
+    div[data-baseweb="input"] > div {
+        background-color: #FFFFFF !important;
+        border-color: #DEDEDE !important;
+        color: #000000 !important;
+    }
+
+    div[data-baseweb="select"]:focus-within > div,
+    div[data-baseweb="input"]:focus-within > div {
+        border-color: #BA0C2F !important;
+        box-shadow: 0 0 0 1px #BA0C2F !important;
+    }
+
+    /* Selected multiselect pills */
+    span[data-baseweb="tag"] {
+        background-color: #BA0C2F !important;
+        color: #FFFFFF !important;
+        border: none !important;
+    }
+
+    /* borders */
+    hr {
+        border-color: #DEDEDE !important;
+    }
+
+    /* small text */
+    .stCaption, [data-testid="stCaptionContainer"] {
+        color: #666666 !important;
+        font-family: 'Merriweather Sans', sans-serif !important;
+    }
+
+    /* alerts */
+    div[data-testid="stAlert"] {
+        border-radius: 4px;
+        border-left: 4px solid #BA0C2F;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.title("UGA Computing Course Plan Visualizer 🐾")
+st.markdown("Select your program, check off completed and active courses, and instantly track your path to graduation!")
 
 # program selector
 prog_name = st.selectbox("Select Program", list(PROGRAMS.keys()))
