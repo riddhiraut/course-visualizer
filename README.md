@@ -2,7 +2,7 @@
 
 IMPORTANT: THIS PROJECT WAS CREATED ENTIRELY TO HELP MYSELF, NOT TO BE TECHNICALLY IMPRESSIVE. PLEASE DON'T JUDGE ME BEFORE READING BELOW 😭
 
-My course plan keeps changing and I'm indecisive about my minors, but UGA's course planning website (DEGREEWORKS) is pretty janky. I've chosen to only include Computing programs at UGA because those are the only ones I'm interested in taking. This project was created to save me time, because I'm tired of using Degreeworks.
+I love my major, but I'm always debating on what minors I want to take. Because of my indecisiveness about said minors, my course plan keeps changing. However, UGA's course planning website (DEGREEWORKS) is pretty janky, so I'm always irritated every time I have to use it. I've chosen to only include Computing minors at UGA (along with my major, ofc) because those are the only ones I'm interested in taking. This project was created to save me time, because I'm tired of using Degreeworks.
 
 Currently integrated just my own major, will be expanding soon :)
 
@@ -27,9 +27,11 @@ data.py
 ---
 
 **Roadmap**
-- [x] Build prototype with just 1 major
-- [x] Expand to all programs incorporated within UGA's College of Computing
-- [ ] Add user profile persistence (database or local storage) to save customized degree roadmaps across sessions
+- [x] Build prototype for my major
+- [x] Format according to UGA's official Style Guide
+- [ ] Expand to incorporate logic for computing/computing-adjacent adjacent minors that I'm interested in (CS Minor, Stat Minor, Math Minor, Cog Sci Minor)
+- [ ] Support custom multi-select Minor/Major combinations
 - [ ] Integrate cumulative GPA tracking and GPA analytics
-- [ ] Support custom elective tracks and minor combinations
+- [ ] Add user profile persistence (database or local storage) to save customized degree roadmaps across sessions
 - [ ] Incorporate "what-if" scenario modeling
+- [ ] Create system to save "what-if" plans
