@@ -14,11 +14,15 @@ The application is built using a clean Object-Oriented Programming (OOP) archite
 
 classes.py {
 Course Class: Details individual course attributes (such as course code, title, credit hours, and prerequisite lists) + validation logic to verify if prerequisites are satisfied.
+
 ComputingProgram Class: Models an academic program by keeping a structured dictionary of course code-to-object mappings.
+
 StudentPlanner Class: Maintains the student's dynamic state (completed and enrolled courses) to compute remaining core requirements, credit tracking, and prerequisite unlocking.
 }
+
 app.py {
 Streamlit frontend: Powers an interactive web UI featuring multi-select inputs, progress metrics, and a tabbed interface separating remaining courses, unlocked classes, and full catalog statuses.
+
 Plan logic: Handles user state management, tracks active/completed multiselect inputs, filters course catalogs into remaining vs. unlocked paths based on prerequisite fulfillment, and computes real-time degree completion percentages.
 }
 
