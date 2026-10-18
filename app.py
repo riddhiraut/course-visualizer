@@ -7,122 +7,98 @@ st.set_page_config(page_title="Course Plan Visualizer", page_icon="🎓", layout
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Merriweather+Sans:wght@400;600;700&family=Oswald:wght@300;500&display=swap');
-
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;600;700&family=Oswald:wght@300;500&display=swap');
+    
     /* page */
     .stApp {
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
+        background-color: #FFFFFF !important; /* white */
+        color: #000000 !important; /* black */
         font-family: 'Merriweather Sans', 'Georgia', serif !important;
     }
-
+    
     /* content headings */
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2 {
         font-family: 'Oswald', 'Merriweather Sans', sans-serif !important;
-        color: #000000 !important;
+        color: #000000 !important; /* black */
         letter-spacing: 0.02em;
     }
-
+    
     h1 {
-        border-bottom: 3px solid #BA0C2F;
+        border-bottom: 3px solid #BA0C2F; /* bulldog red */
         padding-bottom: 0.35rem;
     }
-
-    /* Body text */
+    
+    /* body text */
     p, li, span, label, div[data-testid="stMarkdownContainer"] {
-        color: #000000 !important;
+        color: #000000 !important; /* black */
     }
-
-    /* sidebar */
+    
+    /* sidebar (cosmetic — no sidebar widgets yet, but harmless) */
     section[data-testid="stSidebar"] {
-        background-color: #F2F2F2 !important;
-        border-right: 1px solid #DEDEDE;
+        background-color: #F2F2F2 !important; /* light grey */
+        border-right: 1px solid #DEDEDE; /* light grey (border) */
     }
-
-    /* buttons */
-    .stButton > button {
-        background-color: #BA0C2F !important;
-        color: #FFFFFF !important;          
-        border: none !important;
-        border-radius: 4px !important;
-        font-family: 'Oswald', sans-serif !important;
-        font-weight: 500 !important;
-        letter-spacing: 0.04em;
-        transition: background-color 0.2s ease;
-    }
-
-    .stButton > button:hover {
-        background-color: #E4002B !important;
-        color: #FFFFFF !important;
-    }
-
-    /* outline buttons */
-    .stButton > button[kind="secondary"] {
-        background-color: transparent !important;
-        color: #BA0C2F !important;
-        border: 1px solid #BA0C2F !important;
-    }
-
+    
     /* progress bar */
     div[data-testid="stProgress"] > div > div > div {
-        background-color: #BA0C2F !important;
+        background-color: #E4002B !important; /* glory red */
     }
-
+    
     /* tabs */
     .stTabs [data-baseweb="tab-list"] {
-        border-bottom: 1px solid #DEDEDE;
+        border-bottom: 1px solid #DEDEDE; /* light grey (border) */
     }
-
+    
     .stTabs [data-baseweb="tab"] {
         font-family: 'Oswald', sans-serif !important;
-        color: #666666 !important;            /* Dark Gray */
+        color: #666666 !important; /* dark grey */
         font-weight: 400;
     }
-
+    
     .stTabs [aria-selected="true"] {
-        color: #BA0C2F !important;            /* active tab red */
-        border-bottom: 2px solid #BA0C2F !important;
+        color: #BA0C2F !important; /* bulldog red */
+        border-bottom: 2px solid #BA0C2F !important; /* bulldog red */
         font-weight: 500;
     }
-
-    /* ---------- selectbox/input ---------- */
+    
+    /* selectbox / input widgets
+       (input rules kept for future minor-credit text entry) */
     div[data-baseweb="select"] > div,
     div[data-baseweb="input"] > div {
-        background-color: #FFFFFF !important;
-        border-color: #DEDEDE !important;
-        color: #000000 !important;
+        background-color: #FFFFFF !important; /* white */
+        border-color: #DEDEDE !important; /* light grey (border) */
+        color: #000000 !important; /* black */
     }
-
+    
     div[data-baseweb="select"]:focus-within > div,
     div[data-baseweb="input"]:focus-within > div {
-        border-color: #BA0C2F !important;
-        box-shadow: 0 0 0 1px #BA0C2F !important;
+        border-color: #BA0C2F !important; /* bulldog red */
+        box-shadow: 0 0 0 1px #BA0C2F !important; /* bulldog red */
     }
-
-    /* Selected multiselect pills */
+    
+    /* multiselect pills */
     span[data-baseweb="tag"] {
-        background-color: #BA0C2F !important;
-        color: #FFFFFF !important;
+        background-color: #BA0C2F !important; /* bulldog red */
+        color: #FFFFFF !important; /* white */
         border: none !important;
     }
-
-    /* borders */
+    
+    /* horizontal rule (st.divider) */
     hr {
-        border-color: #DEDEDE !important;
+        border-color: #DEDEDE !important; /* light grey */
     }
-
-    /* small text */
-    .stCaption, [data-testid="stCaptionContainer"] {
-        color: #666666 !important;
+    
+    /* caption text */
+    [data-testid="stCaptionContainer"] {
+        color: #666666 !important; /* dark grey */
         font-family: 'Merriweather Sans', sans-serif !important;
     }
-
-    /* alerts */
+    
+    /* alerts (st.success / st.info) */
     div[data-testid="stAlert"] {
         border-radius: 4px;
-        border-left: 4px solid #BA0C2F;
+        border-left: 4px solid #BA0C2F; /* bulldog red */
     }
-    </style>
     """,
     unsafe_allow_html=True,
 )
