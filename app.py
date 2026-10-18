@@ -17,12 +17,11 @@ st.markdown(
     }
     
     /* content headings */
-    h1, h2 {
+    h1, h2, h3, h4, h5, h6 {
         font-family: 'Oswald', 'Merriweather Sans', sans-serif !important;
         color: #000000 !important; /* black */
         letter-spacing: 0.02em;
     }
-    
     h1 {
         border-bottom: 3px solid #BA0C2F; /* bulldog red */
         padding-bottom: 0.35rem;
