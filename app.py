@@ -160,8 +160,8 @@ with tab1:
     else:
         for code, course in remaining.items():
             ready = code in unlocked_codes
-            status = "🟢 Ready to Enroll" if ready else "🔒 Locked (Missing Prereqs)"
-            st.markdown(f"**{code}: {course.name}** ({course.credits} credits) — *{status}*")
+            status = "🟢 UNLOCKED" if ready else "🔒 LOCKED (Missing Prereqs)"
+            st.markdown(f"**{code}: {course.name}** ({course.credits} credits) — {status}")
             if course.prereqs:
                 missing = [p for p in course.prereqs if p not in planner.completed | planner.enrolled]
                 if missing:
@@ -171,11 +171,14 @@ with tab1:
 
 with tab2:
     st.subheader("Unlocked & Available Next Semester")
+    # remaining = planner.get_remaining()
+    # if not remaining:
+        # st.success("🎉 You have completed all core courses in this degree program!")
     if not unlocked:
-        st.info("No core courses currently unlocked. Complete more prerequisites to unlock new classes.")
+        st.info("‼️ No core courses currently unlocked. Complete more prerequisites to unlock new classes.")
     else:
         for code, course in unlocked.items():
-            st.markdown(f"✅ **{code}: {course.name}** — *{course.credits} credits*")
+            st.markdown(f"👾 **{code}: {course.name}** — *{course.credits} credits*")
 
 with tab3:
     st.subheader("Complete Program Curriculum")
