@@ -57,14 +57,24 @@ class StudentPlanner:
                 return code
         return None
 
-    def add_elective(self, user_input: str) -> tuple[bool, str]:
-        code = self.find_elective_code(user_input)
-        if code is None:
-            return False, f"❌ '{user_input}' isn't a valid elective for this program."
-        if code in self.selected_electives:
-            return False, f"❌ {code} is already in your electives."
-        self.selected_electives.append(code)
-        return True, f"✅ Added {code} as ELECTIVE {len(self.selected_electives)}."
+        def add_elective(self, user_input: str) -> tuple[str, str]:
+            """Returns (status, message); status is 'ok', 'warn', or 'error'."""
+            code = self.find_elective_code(user_input)
+            if code is None:
+                return "error", f"❌ '{user_input}' isn't a valid elective for this program."
+            if code in self.selected_electives:
+                return "error", f"❌ {code} is already in your electives."
+    
+            course = self.program.electives[code]
+            satisfied = self.completed | self.enrolled
+            self.selected_electives.append(code)
+    
+            if course.can_take(satisfied):
+                return "ok", f"✅ Added {code} as ELECTIVE {len(self.selected_electives)}."
+    
+            missing = [p for p in course.prereqs if p not in satisfied]
+            return "warn", (f"⚠️ Added {code} as ELECTIVE {len(self.selected_electives)} — "
+                            f"prerequisite(s) not yet met: {', '.join(missing)}.")
 
     def remove_elective(self, code: str):
         if code in self.selected_electives:
