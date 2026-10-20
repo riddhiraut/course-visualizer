@@ -48,7 +48,12 @@ class StudentPlanner:
         return {c: crs for c, crs in self.get_remaining().items()
                 if crs.can_take(satisfied)}
 
-    # ---------- electives ----------
+    def set_electives(self, codes: Iterable[str]):
+        """Replace the elective selection wholesale (matches multiselect state)."""
+        self.selected_electives = [c for c in codes
+                                   if c in self.program.electives]
+
+    # ELECTIVES
     def find_elective_code(self, user_input: str) -> str | None:
         """Return the canonical elective code matching the input, else None."""
         user_input = user_input.strip()
