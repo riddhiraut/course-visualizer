@@ -235,5 +235,7 @@ with tab3:
     else:
         for code, course in program.electives.items():
             if code in planner.selected_electives:
-                state_label = "✅ Completed"
+                state_label = "✅ Selected"
+            else:
+                state_label = ""
             st.write(f"- **{code}**: {course.name} — *{state_label}*")
