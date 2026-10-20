@@ -60,8 +60,7 @@ st.markdown(
         font-weight: 500;
     }
     
-    /* selectbox / input widgets
-       (input rules kept for future minor-credit text entry) */
+    /* selectbox / input widgets */
     div[data-baseweb="select"] > div,
     div[data-baseweb="input"] > div {
         background-color: #FFFFFF !important; /* white */
@@ -103,7 +102,7 @@ st.markdown(
 )
 
 st.title("UGA Computing Course Plan Visualizer 🐾")
-st.markdown("Select your program, check off completed and active courses, and instantly track your path to graduation!")
+st.markdown("Select your program, check off courses, and instantly track your path to graduation!")
 
 # program selector
 prog_name = st.selectbox("Select Program", list(PROGRAMS.keys()))
@@ -113,57 +112,119 @@ program = PROGRAMS[prog_name]
 if "current_program" not in st.session_state or st.session_state.current_program != prog_name:
     st.session_state.planner = StudentPlanner(program)
     st.session_state.current_program = prog_name
-    st.session_state.comp_sel = []
-    st.session_state.enr_sel = []
+    st.session_state.req_sel = []
 
 planner = st.session_state.planner
 all_codes = list(program.courses.keys())
 
 # user inputs
 col1, col2 = st.columns(2)
-with col1:
-    completed = st.multiselect("Courses Completed", all_codes, key="comp_sel")
-with col2:
-    available_for_enroll = []
-    for c in all_codes:
-        if c not in completed:
-            available_for_enroll.append(c)
-    if "enr_sel" in st.session_state: # remove stale selections BEFORE the widget renders
-        st.session_state.enr_sel = [c for c in st.session_state.enr_sel if c in available_for_enroll]
-    enrolled = st.multiselect("Courses Currently Enrolled", available_for_enroll, key="enr_sel")
 
-# update planner state
-planner.update_status(completed, enrolled)
+with col1:
+    satisfied = st.multiselect(
+        "Required Courses (Completed or Enrolled)",
+        all_codes,
+        key="req_sel",
+    )
+
+with col2:
+    # dynamic — uses whichever program is currently selected
+    st.markdown(f"**{program.name} — Electives**")
+    example_code = next(iter(program.electives), None)
+    example_hint = f" — e.g., `{example_code}`" if example_code else ""
+    st.caption(
+        f"Need at least **{program.electives_required}** electives. "
+        f"Enter a course code (case-sensitive){example_hint}."
+    )
+
+    with st.expander("View eligible elective codes"):
+        if not program.electives:
+            st.write("_No electives defined for this program yet._")
+        for code, course in program.electives.items():
+            alias_str = f" (or {', '.join(course.aliases)})" if course.aliases else ""
+            st.write(f"- **{code}**: {course.name} — {course.credits} cr{alias_str}")
+
+    with st.form("add_elective_form", clear_on_submit=True):
+        elective_input = st.text_input(
+            "Add elective by course code",
+            placeholder="e.g., CSCI 3030",
+            label_visibility="collapsed",
+        )
+        submitted = st.form_submit_button("➕ Add Elective")
+
+    if submitted:
+        if elective_input.strip():
+            ok, msg = planner.add_elective(elective_input)
+            (st.success if ok else st.error)(msg)
+        else:
+            st.warning("Please enter a course code.")
+
+# update planner state — completed/enrolled merged into one list
+planner.update_status(satisfied, [])
+
+# current elective selections with remove buttons
+if planner.selected_electives:
+    st.markdown("**Your Selected Electives:**")
+    for i, code in enumerate(planner.selected_electives, start=1):
+        course = program.electives[code]
+        c1, c2 = st.columns([5, 1])
+        c1.markdown(f"- **ELECTIVE {i}** — {code}: {course.name} (*{course.credits} cr*)")
+        if c2.button("Remove", key=f"rm_{code}"):
+            planner.remove_elective(code)
+            st.rerun()
 
 st.divider()
 
 # metrics
-total_courses = len(program.courses)
-comp_count = len(completed)
-progress_pct = comp_count / total_courses if total_courses > 0 else 0
+total_required = len(program.courses)
+satisfied_count = len(satisfied)
+req_pct = satisfied_count / total_required if total_required else 0
+
+elec_count = planner.get_electives_count()
+elec_req = program.electives_required
+elec_credits = planner.get_elective_credits()
+
+# cap counted electives at the requirement so extras don't push the bar past 100%
+counted_electives = min(elec_count, elec_req)
+elec_pct = counted_electives / elec_req if elec_req else 0
 
 st.subheader("📊 Degree Progress")
-st.progress(progress_pct)
-st.write(f"Completed **{comp_count}** of **{total_courses}** core program requirements ({progress_pct*100:.1f}%)")
 
-# tabs
-tab1, tab2, tab3 = st.tabs(["Remaining Courses", "Unlocked (Ready to Take)", "Full Catalog Status"])
+st.write(f"**Required Courses:** {satisfied_count}/{total_required}")
+st.progress(req_pct)
 
-unlocked = planner.get_unlocked_remaining() # compute to reuse in tab1 + tab2
+st.write(f"**Electives:** {counted_electives}/{elec_req} ({elec_credits} credits selected)")
+st.progress(elec_pct)
+
+if elec_req and elec_count >= elec_req:
+    extra = elec_count - elec_req
+    extra_note = f" (+{extra} extra)" if extra > 0 else ""
+    st.success(f"🎉 Elective requirement met — {elec_count} electives{extra_note}, {elec_credits} credits.")
+elif elec_req:
+    st.caption(f"{elec_req - elec_count} more elective(s) needed.")
+
+# TABS
+tab1, tab2, tab3 = st.tabs(
+    ["Remaining Required Courses", "Unlocked (Ready to Take)", "Full Catalog Status"]
+)
+
+unlocked = planner.get_unlocked_remaining()
 unlocked_codes = set(unlocked.keys())
+unlocked_electives = planner.get_unlocked_electives()
 
 with tab1:
-    st.subheader("Courses Left to Complete")
+    st.subheader("Required Courses Left to Complete")
     remaining = planner.get_remaining()
     if not remaining:
-        st.success("🎉 You have completed all core courses in this degree program!")
+        st.success("🎉 You've completed all core courses in this degree program!")
     else:
         for code, course in remaining.items():
             ready = code in unlocked_codes
             status = "🟢 UNLOCKED" if ready else "🔒 LOCKED (Missing Prereqs)"
             st.markdown(f"**{code}: {course.name}** ({course.credits} credits) — {status}")
             if course.prereqs:
-                missing = [p for p in course.prereqs if p not in planner.completed | planner.enrolled]
+                missing = [p for p in course.prereqs
+                           if p not in planner.completed | planner.enrolled]
                 if missing:
                     st.caption(f"Prerequisites: {', '.join(course.prereqs)} — missing: {', '.join(missing)}")
                 else:
@@ -171,17 +232,25 @@ with tab1:
 
 with tab2:
     st.subheader("Unlocked & Available Next Semester")
-    # remaining = planner.get_remaining()
-    # if not remaining:
-        # st.success("🎉 You have completed all core courses in this degree program!")
+
+    st.markdown("**Required-**")
     if not unlocked:
-        st.info("‼️ No core courses currently unlocked. Complete more prerequisites to unlock new classes.")
+        st.info("‼️ No required courses currently unlocked. Complete more prerequisites to unlock new classes.")
     else:
         for code, course in unlocked.items():
             st.markdown(f"👾 **{code}: {course.name}** — *{course.credits} credits*")
 
+    st.markdown("**Electives-**")
+    if not unlocked_electives:
+        st.info("No electives available — all selected, or prerequisites not yet met.")
+    else:
+        for code, course in unlocked_electives.items():
+            st.markdown(f"👾 **{code}: {course.name}** — *{course.credits} credits*")
+
 with tab3:
-    st.subheader("Complete Program Curriculum")
+    st.subheader(f"Complete Program Curriculum — {program.name}")
+
+    st.markdown("**Required Courses**")
     for code, course in program.courses.items():
         if code in planner.completed:
             state_label = "✅ Completed"
@@ -190,3 +259,13 @@ with tab3:
         else:
             state_label = "⏳ Remaining"
         st.write(f"- **{code}**: {course.name} — *{state_label}*")
+
+    st.markdown("**Electives**")
+    # render at least the required slots; append extra ones if the user picked more
+    num_slots = max(program.electives_required, len(planner.selected_electives))
+    for i in range(num_slots):
+        if i < len(planner.selected_electives):
+            code = planner.selected_electives[i]
+            st.write(f"- **ELECTIVE {i+1}** — *✅ {code}*")
+        else:
+            st.write(f"- **ELECTIVE {i+1}** — *⏳ Remaining*")
