@@ -236,5 +236,4 @@ with tab3:
         for code, course in program.electives.items():
             if code in planner.selected_electives:
                 state_label = "✅ Completed"
-            alias_str = f" (or {', '.join(course.aliases)})" if course.aliases else ""
-            st.write(f"- **{code}**: {course.name}")
+            st.write(f"- **{code}**: {course.name} — *{state_label}*")
