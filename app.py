@@ -132,7 +132,7 @@ with col2:
     st.multiselect(
         f"Electives (Completed or Enrolled)",
         list(program.electives.keys()),
-        format_func=lambda c: f"{c} — {program.electives[c].name} ({program.electives[c].credits} cr)",
+        format_func=lambda c: f"{c})",
         key="elec_sel",
     )
 
