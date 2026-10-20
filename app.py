@@ -129,14 +129,10 @@ with col1:
 
 with col2:
     # dynamic — uses whichever program is currently selected
-    st.markdown(f"**{program.name} — Electives**")
+    st.markdown(f"Electives")
     example_code = next(iter(program.electives), None)
     example_hint = f" — e.g., `{example_code}`" if example_code else ""
-    st.caption(
-        f"Need at least **{program.electives_required}** electives. "
-        f"Enter a course code (case-sensitive){example_hint}."
-    )
-
+    
     with st.expander("View eligible elective codes"):
         if not program.electives:
             st.write("_No electives defined for this program yet._")
