@@ -102,7 +102,7 @@ st.markdown(
 )
 
 st.title("UGA Computing Course Plan Visualizer 🐾")
-st.markdown("Select your program, check off courses, and instantly track your path to graduation!")
+st.markdown("Select your program, check off completed and active courses, and instantly track your path to graduation!")
 
 # program selector
 prog_name = st.selectbox("Select Program", list(PROGRAMS.keys()))
@@ -113,6 +113,7 @@ if "current_program" not in st.session_state or st.session_state.current_program
     st.session_state.planner = StudentPlanner(program)
     st.session_state.current_program = prog_name
     st.session_state.req_sel = []
+    st.session_state.elec_sel = []
 
 planner = st.session_state.planner
 all_codes = list(program.courses.keys())
@@ -128,33 +129,20 @@ with col1:
     )
 
 with col2:
-    elective_options = list(program.electives.keys())
-    selected = st.multiselect(
+    st.multiselect(
         f"Electives (need at least {program.electives_required})",
-        elective_options,
+        list(program.electives.keys()),
         format_func=lambda c: f"{c} — {program.electives[c].name} ({program.electives[c].credits} cr)",
         key="elec_sel",
     )
-    planner.set_electives(selected)
 
-# update planner state — completed/enrolled merged into one list
+# sync planner state from widgets
 planner.update_status(satisfied, [])
-
-# current elective selections with remove buttons
-if planner.selected_electives:
-    st.markdown("**Your Selected Electives:**")
-    for i, code in enumerate(planner.selected_electives, start=1):
-        course = program.electives[code]
-        c1, c2 = st.columns([5, 1])
-        c1.markdown(f"- **ELECTIVE {i}** — {code}: {course.name} (*{course.credits} cr*)")
-        if c2.button("Remove", key=f"rm_{code}"):
-            planner.remove_elective(code)
-            st.rerun()
+planner.set_electives(st.session_state.elec_sel)
 
 st.divider()
 
-# METRICS
-
+# ---------- metrics ----------
 total_required = len(program.courses)
 satisfied_count = len(satisfied)
 
@@ -176,8 +164,10 @@ st.caption(
     f"Required courses: {satisfied_count}/{total_required} · "
     f"Electives: {counted_electives}/{elec_req} ({elec_credits} credits selected)"
 )
+if elec_req and elec_count < elec_req:
+    st.caption(f"{elec_req - elec_count} more elective(s) needed.")
 
-# TABS
+# ---------- tabs ----------
 tab1, tab2, tab3 = st.tabs(
     ["Remaining Required Courses", "Unlocked (Ready to Take)", "Full Catalog Status"]
 )
@@ -244,7 +234,6 @@ with tab3:
         st.write(f"- **{code}**: {course.name} — *{state_label}*")
 
     st.markdown("**Electives**")
-    # render at least the required slots; append extra ones if the user picked more
     num_slots = max(program.electives_required, len(planner.selected_electives))
     for i in range(num_slots):
         if i < len(planner.selected_electives):
