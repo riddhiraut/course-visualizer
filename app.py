@@ -225,17 +225,16 @@ with tab3:
     for code, course in program.courses.items():
         if code in planner.completed:
             state_label = "✅ Completed"
-        elif code in planner.enrolled:
-            state_label = "🟡 Enrolled"
         else:
             state_label = "⏳ Remaining"
         st.write(f"- **{code}**: {course.name} — *{state_label}*")
 
     st.markdown("**Electives**")
-    num_slots = max(program.electives_required, len(planner.selected_electives))
-    for i in range(num_slots):
-        if i < len(planner.selected_electives):
-            code = planner.selected_electives[i]
-            st.write(f"- **ELECTIVE {i+1}** — *✅ {code}*")
-        else:
-            st.write(f"- **ELECTIVE {i+1}** — *⏳ Remaining*")
+    if not program.electives:
+        st.write("_No electives defined for this program yet._")
+    else:
+        for code, course in program.electives.items():
+            if code in planner.selected_electives:
+                state_label = "✅ Completed"
+            alias_str = f" (or {', '.join(course.aliases)})" if course.aliases else ""
+            st.write(f"- **{code}**: {course.name} — *{state_label}*{alias_str}")
