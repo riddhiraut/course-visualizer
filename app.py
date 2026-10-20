@@ -154,8 +154,13 @@ with col2:
 
     if submitted:
         if elective_input.strip():
-            ok, msg = planner.add_elective(elective_input)
-            (st.success if ok else st.error)(msg)
+            status, msg = planner.add_elective(elective_input)
+            if status == "ok":
+                st.success(msg)
+            elif status == "warn":
+                st.warning(msg)
+            else:
+                st.error(msg)
         else:
             st.warning("Please enter a course code.")
 
