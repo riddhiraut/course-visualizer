@@ -63,9 +63,6 @@ class StudentPlanner:
             return False, f"❌ '{user_input}' isn't a valid elective for this program."
         if code in self.selected_electives:
             return False, f"❌ {code} is already in your electives."
-        if len(self.selected_electives) >= self.program.electives_required:
-            return False, (f"❌ Already at {self.program.electives_required} electives. "
-                           "Remove one first.")
         self.selected_electives.append(code)
         return True, f"✅ Added {code} as ELECTIVE {len(self.selected_electives)}."
 
