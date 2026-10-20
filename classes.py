@@ -39,6 +39,10 @@ class StudentPlanner:
         self.completed = set(completed)
         self.enrolled = set(enrolled)
 
+    def set_electives(self, codes: Iterable[str]):
+        """Replace the elective selection wholesale (mirrors multiselect state)."""
+        self.selected_electives = [c for c in codes if c in self.program.electives]
+
     def get_remaining(self) -> dict[str, Course]:
         return {c: crs for c, crs in self.program.courses.items()
                 if c not in self.completed and c not in self.enrolled}
@@ -48,12 +52,7 @@ class StudentPlanner:
         return {c: crs for c, crs in self.get_remaining().items()
                 if crs.can_take(satisfied)}
 
-    def set_electives(self, codes: Iterable[str]):
-        """Replace the elective selection wholesale (matches multiselect state)."""
-        self.selected_electives = [c for c in codes
-                                   if c in self.program.electives]
-
-    # ELECTIVES
+    # ---------- electives ----------
     def find_elective_code(self, user_input: str) -> str | None:
         """Return the canonical elective code matching the input, else None."""
         user_input = user_input.strip()
@@ -69,17 +68,17 @@ class StudentPlanner:
             return "error", f"❌ '{user_input}' isn't a valid elective for this program."
         if code in self.selected_electives:
             return "error", f"❌ {code} is already in your electives."
-    
+
         course = self.program.electives[code]
         satisfied = self.completed | self.enrolled
         self.selected_electives.append(code)
-    
+
         if course.can_take(satisfied):
             return "ok", f"✅ Added {code} as ELECTIVE {len(self.selected_electives)}."
-    
+
         missing = [p for p in course.prereqs if p not in satisfied]
         return "warn", (f"⚠️ Added {code} as ELECTIVE {len(self.selected_electives)} — "
-                            f"prerequisite(s) not yet met: {', '.join(missing)}.")
+                        f"prerequisite(s) not yet met: {', '.join(missing)}.")
 
     def remove_elective(self, code: str):
         if code in self.selected_electives:
