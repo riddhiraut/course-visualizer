@@ -128,37 +128,14 @@ with col1:
     )
 
 with col2:
-    # dynamic — uses whichever program is currently selected
-    st.markdown(f"Electives")
-    example_code = next(iter(program.electives), None)
-    example_hint = f" — e.g., `{example_code}`" if example_code else ""
-    
-    with st.expander("View eligible elective codes"):
-        if not program.electives:
-            st.write("_No electives defined for this program yet._")
-        for code, course in program.electives.items():
-            alias_str = f" (or {', '.join(course.aliases)})" if course.aliases else ""
-            st.write(f"- **{code}**: {course.name} — {course.credits} cr{alias_str}")
-
-    with st.form("add_elective_form", clear_on_submit=True):
-        elective_input = st.text_input(
-            "Add elective by course code",
-            placeholder="e.g., CSCI 3030",
-            label_visibility="collapsed",
-        )
-        submitted = st.form_submit_button("➕ Add Elective")
-
-    if submitted:
-        if elective_input.strip():
-            status, msg = planner.add_elective(elective_input)
-            if status == "ok":
-                st.success(msg)
-            elif status == "warn":
-                st.warning(msg)
-            else:
-                st.error(msg)
-        else:
-            st.warning("Please enter a course code.")
+    elective_options = list(program.electives.keys())
+    selected = st.multiselect(
+        f"Electives (need at least {program.electives_required})",
+        elective_options,
+        format_func=lambda c: f"{c} — {program.electives[c].name} ({program.electives[c].credits} cr)",
+        key="elec_sel",
+    )
+    planner.set_electives(selected)
 
 # update planner state — completed/enrolled merged into one list
 planner.update_status(satisfied, [])
