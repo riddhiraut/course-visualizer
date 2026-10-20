@@ -1,46 +1,86 @@
 from typing import Iterable
 
 class Course:
-    def __init__(self, code: str, name: str, credits: int, prereqs: list[str] = None):
+    def __init__(self, code: str, name: str, credits: int,
+                 prereqs: list[str] = None, aliases: list[str] = None):
         self.code = code
         self.name = name
         self.credits = credits
         self.prereqs = prereqs or []
+        self.aliases = aliases or []
 
-    # prereq check
     def can_take(self, completed_set: set[str]) -> bool:
         return all(p in completed_set for p in self.prereqs)
 
+    def matches_code(self, user_input: str) -> bool:
+        """Case-sensitive match against the primary code or any alias."""
+        return user_input == self.code or user_input in self.aliases
+
+
 class ComputingProgram:
-    def __init__(self, name: str, courses: dict[str, Course]):
+    def __init__(self, name: str, courses: dict[str, Course],
+                 electives: dict[str, Course] = None,
+                 electives_required: int = 0):
         self.name = name
-        # dict mapping course code to Course object
         self.courses = courses
+        self.electives = electives or {}
+        self.electives_required = electives_required
+
 
 class StudentPlanner:
     def __init__(self, program: ComputingProgram):
         self.program = program
         self.completed: set[str] = set()
         self.enrolled: set[str] = set()
+        # list, not set — order matters so ELECTIVE 1/2/3/4 display in add order
+        self.selected_electives: list[str] = []
 
     def update_status(self, completed: Iterable[str], enrolled: Iterable[str]):
         self.completed = set(completed)
         self.enrolled = set(enrolled)
 
-    # returns courses not yet completed or currently enrolled in
     def get_remaining(self) -> dict[str, Course]:
-        remaining_courses = {}
-        for code, course in self.program.courses.items():
-            if code not in self.completed and code not in self.enrolled:
-                remaining_courses[code] = course
-        return remaining_courses
-      
-    # returns remaining courses whose prerequisites are fully met
+        return {c: crs for c, crs in self.program.courses.items()
+                if c not in self.completed and c not in self.enrolled}
+
     def get_unlocked_remaining(self) -> dict[str, Course]:
-        remaining = self.get_remaining()
         satisfied = self.completed | self.enrolled
-        unlocked_courses = {}
-        for code, course in remaining.items():
-            if course.can_take(satisfied):
-                unlocked_courses[code] = course
-        return unlocked_courses
+        return {c: crs for c, crs in self.get_remaining().items()
+                if crs.can_take(satisfied)}
+
+    # ---------- electives ----------
+    def find_elective_code(self, user_input: str) -> str | None:
+        """Return the canonical elective code matching the input, else None."""
+        user_input = user_input.strip()
+        for code, course in self.program.electives.items():
+            if course.matches_code(user_input):
+                return code
+        return None
+
+    def add_elective(self, user_input: str) -> tuple[bool, str]:
+        code = self.find_elective_code(user_input)
+        if code is None:
+            return False, f"❌ '{user_input}' isn't a valid elective for this program."
+        if code in self.selected_electives:
+            return False, f"❌ {code} is already in your electives."
+        if len(self.selected_electives) >= self.program.electives_required:
+            return False, (f"❌ Already at {self.program.electives_required} electives. "
+                           "Remove one first.")
+        self.selected_electives.append(code)
+        return True, f"✅ Added {code} as ELECTIVE {len(self.selected_electives)}."
+
+    def remove_elective(self, code: str):
+        if code in self.selected_electives:
+            self.selected_electives.remove(code)
+
+    def get_elective_credits(self) -> int:
+        return sum(self.program.electives[c].credits for c in self.selected_electives)
+
+    def get_electives_count(self) -> int:
+        return len(self.selected_electives)
+
+    def get_unlocked_electives(self) -> dict[str, Course]:
+        """Electives whose prereqs are met AND that haven't been picked yet."""
+        satisfied = self.completed | self.enrolled
+        return {c: e for c, e in self.program.electives.items()
+                if c not in self.selected_electives and e.can_take(satisfied)}
