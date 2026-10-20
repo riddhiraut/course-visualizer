@@ -183,23 +183,25 @@ st.divider()
 # metrics
 total_required = len(program.courses)
 satisfied_count = len(satisfied)
-req_pct = satisfied_count / total_required if total_required else 0
 
 elec_count = planner.get_electives_count()
 elec_req = program.electives_required
 elec_credits = planner.get_elective_credits()
-
 # cap counted electives at the requirement so extras don't push the bar past 100%
 counted_electives = min(elec_count, elec_req)
-elec_pct = counted_electives / elec_req if elec_req else 0
+
+# unified progress: required courses + counted electives
+total_items = total_required + elec_req
+completed_items = satisfied_count + counted_electives
+overall_pct = completed_items / total_items if total_items else 0
 
 st.subheader("📊 Degree Progress")
-
-st.write(f"**Required Courses:** {satisfied_count}/{total_required}")
-st.progress(req_pct)
-
-st.write(f"**Electives:** {counted_electives}/{elec_req} ({elec_credits} credits selected)")
-st.progress(elec_pct)
+st.progress(overall_pct)
+st.write(f"**Overall:** {completed_items}/{total_items} requirements met ({overall_pct*100:.1f}%)")
+st.caption(
+    f"Required courses: {satisfied_count}/{total_required} · "
+    f"Electives: {counted_electives}/{elec_req} ({elec_credits} credits selected)"
+)
 
 if elec_req and elec_count >= elec_req:
     extra = elec_count - elec_req
