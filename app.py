@@ -180,7 +180,8 @@ if planner.selected_electives:
 
 st.divider()
 
-# metrics
+# METRICS
+
 total_required = len(program.courses)
 satisfied_count = len(satisfied)
 
@@ -202,13 +203,6 @@ st.caption(
     f"Required courses: {satisfied_count}/{total_required} · "
     f"Electives: {counted_electives}/{elec_req} ({elec_credits} credits selected)"
 )
-
-if elec_req and elec_count >= elec_req:
-    extra = elec_count - elec_req
-    extra_note = f" (+{extra} extra)" if extra > 0 else ""
-    st.success(f"🎉 Elective requirement met — {elec_count} electives{extra_note}, {elec_credits} credits.")
-elif elec_req:
-    st.caption(f"{elec_req - elec_count} more elective(s) needed.")
 
 # TABS
 tab1, tab2, tab3 = st.tabs(
@@ -236,6 +230,15 @@ with tab1:
                     st.caption(f"Prerequisites: {', '.join(course.prereqs)} — missing: {', '.join(missing)}")
                 else:
                     st.caption(f"Prerequisites: {', '.join(course.prereqs)}")
+
+    st.subheader("Electives Left to Complete")
+    if elec_req and elec_count >= elec_req:
+        extra = elec_count - elec_req
+        extra_note = f" (+{extra} extra)" if extra > 0 else ""
+        st.success(f"🎉 Elective requirement met — {elec_count} electives{extra_note}, {elec_credits} credits.")
+    else:
+        for i in range(elec_count, elec_req):
+            st.markdown(f"**ELECTIVE {i+1}** — ⏳ Remaining")
 
 with tab2:
     st.subheader("Unlocked & Available Next Semester")
