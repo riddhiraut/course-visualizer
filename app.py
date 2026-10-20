@@ -130,7 +130,7 @@ with col1:
 
 with col2:
     st.multiselect(
-        f"Electives (need at least {program.electives_required})",
+        f"Electives (Completed or Enrolled)",
         list(program.electives.keys()),
         format_func=lambda c: f"{c} — {program.electives[c].name} ({program.electives[c].credits} cr)",
         key="elec_sel",
@@ -164,10 +164,8 @@ st.caption(
     f"Required courses: {satisfied_count}/{total_required} · "
     f"Electives: {counted_electives}/{elec_req} ({elec_credits} credits selected)"
 )
-if elec_req and elec_count < elec_req:
-    st.caption(f"{elec_req - elec_count} more elective(s) needed.")
 
-# ---------- tabs ----------
+# TABS
 tab1, tab2, tab3 = st.tabs(
     ["Remaining Required Courses", "Unlocked (Ready to Take)", "Full Catalog Status"]
 )
