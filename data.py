@@ -11,14 +11,14 @@ datascience_required = {
     "MATH 2270": Course("MATH 2270", "Calculus III", 4, ["MATH 2260"]),
     "STAT 2000": Course("STAT 2000", "Introductory Statistics", 4, []),
     "CSCI 1301": Course("CSCI 1301", "Intro to Computing and Programming", 4, []),
-    "CSCI 3360": Course("CSCI 3360", "Data Science & Applied Machine Learning I", 3, ["CSCI 1301", "MATH 2250"]),
+    "CSCI 3360": Course("CSCI 3360", "Data Science & Applied Machine Learning I", 4, ["CSCI 1301", "MATH 2250"]),
     "CSCI 2610": Course("CSCI 2610", "Discrete Mathematics for Computer Science", 4, []),
     "CSCI 1302": Course("CSCI 1302", "Software Development", 4, ["CSCI 1301"]),
     "MATH 3300": Course("MATH 3300", "Applied Linear Algebra", 3, ["MATH 2260"]),
     "CSCI 4360": Course("CSCI 4360", "Data Science II", 4, ["CSCI 3360"]),
     "STAT 4365": Course("STAT 4365", "Modern Statistical Programming", 3, ["STAT 2000"]),
     "STAT 4230": Course("STAT 4230", "Applied Regression Analysis", 3, ["STAT 2000", "MATH 2250"]),
-    "CSCI 2725": Course("CSCI 2725", "Data Structures for Data Science", 4, ["CSCI 1302"]),
+    "CSCI 2725": Course("CSCI 2725", "Data Structures for Data Science", 4, ["CSCI 1302", "CSCI 2610"]),
     "CSCI 2670": Course("CSCI 2670", "Introduction to Theory of Computing", 4, ["CSCI 2610"]),
     "CSCI 4260": Course("CSCI 4260", "Data Security and Privacy", 4, ["CSCI 2725"]),
     "STAT 4510": Course("STAT 4510", "Mathematical Statistics I", 3, ["MATH 2270"]),
@@ -32,7 +32,7 @@ datascience_required = {
 datascience_electives = {
     "CSCI 3030": Course("CSCI 3030", "Computing, Ethics, and Society", 3),
     "CSCI 4050": Course("CSCI 4050", "Software Engineering", 4,
-                        prereqs=["CSCI 1302"],
+                        prereqs=["CSCI 2725"],
                         aliases=["CSCI 4050/6050", "CSCI 6050"]),
     "CSCI 4150": Course("CSCI 4150", "Numerical Simulations in Science and Engineering", 4,
                         prereqs=["CSCI 1302", "MATH 2270"],
@@ -44,7 +44,7 @@ datascience_electives = {
                         prereqs=["CSCI 1302", "STAT 2000"],
                         aliases=["CSCI 4210/6210", "CSCI 6210"]),
     "CSCI 4470": Course("CSCI 4470", "Algorithms", 4,
-                        prereqs=["CSCI 2610", "CSCI 2725"],
+                        prereqs=["CSCI 2670", "CSCI 2725"],
                         aliases=["CSCI 4470/6470", "CSCI 6470"]),
     "CSCI 4850": Course("CSCI 4850", "Biomedical Image Analysis", 4,
                         prereqs=["CSCI 1302"],
@@ -104,22 +104,34 @@ datascience_major = ComputingProgram(
 # B.S. in Computer Science (skeleton — fill in when ready)
 # ============================================================
 
-# computerscience_required = {
-#     "CSCI 1301": Course("CSCI 1301", "Intro to Computing and Programming", 4, []),
-#     ...
-# }
-#
-# computerscience_electives = {
-#     "CSCI 4XXX": Course("CSCI 4XXX", "Some CS elective", 4, prereqs=[...]),
-#     ...
-# }
-#
-# computerscience_major = ComputingProgram(
-#     name="B.S. in Computer Science",
-#     courses=computerscience_required,
-#     electives=computerscience_electives,
-#     electives_required=3,   # whatever the actual count is
-# )
+computerscience_required = {
+    "MATH 2250": Course("MATH 2250", "Calculus I for Science and Engineering", 4, []),
+    "MATH 2260": Course("MATH 2260", "Calculus II for Science and Engineering", 4, ["MATH 2250"]),
+    "CSCI 1301": Course("CSCI 1301", "Intro to Computing and Programming", 4, []),
+    "CSCI 2610": Course("CSCI 2610", "Discrete Mathematics for Computer Science", 4, []),
+    "CSCI 3030": Course("CSCI 3030", "Computing, Ethics, and Society", 3),
+    "CSCI 1302": Course("CSCI 1302", "Software Development", 4, ["CSCI 1301"]),
+    "CSCI 1730": Course("CSCI 1730", "Systems Programming", 4, ["CSCI 1302"]),
+    "CSCI 2670": Course("CSCI 2670", "Theory of Computation", 4, ["CSCI 2610"]),
+    "CSCI 2720": Course("CSCI 2720", "Data Structures", 4, ["CSCI 2610", "CSCI 1302"]),
+    "CSCI 4720": Course("CSCI 4720", "Computer Architecture", 4, ["CSCI 2670", "CSCI 1730"]),
+    "CSCI 4470": Course("CSCI 4470", "Algorithms", 4, ["CSCI 2670", "CSCI 2725"]),
+    "CSCI 4050": Course("CSCI 4050", "Software Engineering", 4, ["CSCI 2720"]),
+    "CSCI 4760": Course("CSCI 4760", "Computer Networks", 4, ["CSCI 2670", "CSCI 2725"]),
+}
+
+"""
+computerscience_electives = {
+    "CSCI 4XXX": Course("CSCI 4XXX", "Some CS elective", 4, prereqs=[...]),
+}
+"""
+
+computerscience_major = ComputingProgram(
+     name="B.S. in Computer Science",
+     courses=computerscience_required,
+     electives=computerscience_electives,
+     electives_required=4,
+)
 
 PROGRAMS = {
     "B.S. in Data Science": datascience_major,
