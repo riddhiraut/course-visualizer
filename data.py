@@ -103,7 +103,10 @@ computerscience_required = {
 }
 
 computerscience_electives = {
-    "CSCI 4XXX": Course("CSCI 4XXX", "Some CS elective", 4, prereqs=[...]),
+    "CSCI 4XXX": Course("CSCI 4XXX", "Some 4000 level CSCI class", 4, prereqs=[]),
+    "CSCI 4XXX": Course("CSCI 4XXX", "Some 4000 level CSCI class", 4, prereqs=[]),
+    "CSCI 4XXX": Course("CSCI 4XXX", "Some 4000 level CSCI class", 4, prereqs=[]),
+    "CSCI 4XXX": Course("CSCI 4XXX", "Some 4000 level CSCI class", 4, prereqs=[]),
     "CSCI 2150": Course("CSCI 2150", "Introduction to Computational Science", 4,
                         prereqs=[]),
     "CSCI 4150": Course("CSCI 4150", "Numerical Simulations in Science and Engineering", 4,
@@ -139,7 +142,7 @@ computerscience_major = ComputingProgram(
      name="B.S. in Computer Science",
      courses=computerscience_required,
      electives=computerscience_electives,
-     electives_required=4,
+     electives_required=8,
 )
 
 PROGRAMS = {
