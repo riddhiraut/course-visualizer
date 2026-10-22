@@ -142,7 +142,7 @@ planner.set_electives(st.session_state.elec_sel)
 
 st.divider()
 
-# ---------- metrics ----------
+# METRICS
 total_required = len(program.courses)
 satisfied_count = len(satisfied)
 
@@ -157,7 +157,7 @@ total_items = total_required + elec_req
 completed_items = satisfied_count + counted_electives
 overall_pct = completed_items / total_items if total_items else 0
 
-st.subheader("📊 Degree Progress")
+st.subheader("Degree Progress")
 st.progress(overall_pct)
 st.write(f"**Overall:** {completed_items}/{total_items} requirements met ({overall_pct*100:.1f}%)")
 st.caption(
