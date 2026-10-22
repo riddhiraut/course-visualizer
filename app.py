@@ -161,8 +161,8 @@ st.subheader("Degree Progress")
 st.progress(overall_pct)
 st.write(f"**Overall:** {completed_items}/{total_items} requirements met ({overall_pct*100:.1f}%)")
 st.caption(
-    f"Required courses: {satisfied_count}/{total_required} · "
-    f"Electives: {counted_electives}/{elec_req} ({elec_credits} credits selected)"
+    f"Required courses: {satisfied_count}/{total_required} | "
+    f"Electives: {counted_electives}/{elec_req}"
 )
 
 # TABS
