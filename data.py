@@ -144,5 +144,5 @@ computerscience_major = ComputingProgram(
 
 PROGRAMS = {
     "B.S. in Data Science": datascience_major,
-    # "B.S. in Computer Science": computerscience_major,
+    "B.S. in Computer Science": computerscience_major,
 }
