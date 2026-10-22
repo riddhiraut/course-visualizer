@@ -103,11 +103,11 @@ computerscience_required = {
 }
 
 computerscience_electives = {
-    "CSCI 4XXX": Course("CSCI 4XXX", "Some 4000 level CSCI class 1", 4, prereqs=[]),
-    "CSCI 4XXX": Course("CSCI 4XXX", "Some 4000 level CSCI class 2", 4, prereqs=[]),
-    "CSCI 4XXX": Course("CSCI 4XXX", "Some 4000 level CSCI class 3", 4, prereqs=[]),
-    "CSCI 4XXX": Course("CSCI 4XXX", "Some 4000 level CSCI class 4", 4, prereqs=[]),
-    "CSCI 2150": Course("CSCI 2150", "Introduction to Computational Science", 4,
+    "CSCI 4XXX 1": Course("CSCI 4XXX", "Some 4000 level CSCI class 1", 4, prereqs=[]),
+    "CSCI 4XXX 2": Course("CSCI 4XXX", "Some 4000 level CSCI class 2", 4, prereqs=[]),
+    "CSCI 4XXX 3": Course("CSCI 4XXX", "Some 4000 level CSCI class 3", 4, prereqs=[]),
+    "CSCI 4XXX 4": Course("CSCI 4XXX", "Some 4000 level CSCI class 4", 4, prereqs=[]),
+    "CSCI 2150 5": Course("CSCI 2150", "Introduction to Computational Science", 4,
                         prereqs=[]),
     "CSCI 4150": Course("CSCI 4150", "Numerical Simulations in Science and Engineering", 4,
                         prereqs=["CSCI 1302", "MATH 2270"]),
