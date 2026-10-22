@@ -102,7 +102,7 @@ st.markdown(
 )
 
 st.title("UGA Computing Course Plan Visualizer 🐾")
-st.markdown("Select your program, check off completed and active courses, and instantly track your path to graduation!")
+st.markdown("Select your program, check off completed courses, and instantly track your path to graduation!")
 
 # program selector
 prog_name = st.selectbox("Select Program", list(PROGRAMS.keys()))
@@ -123,21 +123,21 @@ col1, col2 = st.columns(2)
 
 with col1:
     satisfied = st.multiselect(
-        "Required Courses (Completed or Enrolled)",
+        "Required Courses (Completed)",
         all_codes,
         key="req_sel",
     )
 
 with col2:
     st.multiselect(
-        f"Electives (Completed or Enrolled)",
+        "Electives (Completed)",
         list(program.electives.keys()),
         format_func=lambda c: f"{c}",
         key="elec_sel",
     )
 
 # sync planner state from widgets
-planner.update_status(satisfied, [])
+planner.update_status(satisfied)
 planner.set_electives(st.session_state.elec_sel)
 
 st.divider()
@@ -167,7 +167,7 @@ st.caption(
 
 # TABS
 tab1, tab2, tab3 = st.tabs(
-    ["Remaining Required Courses", "Unlocked (Ready to Take)", "Full Catalog Status"]
+    ["Remaining Courses", "Unlocked (Ready to Take)", "Full Catalog Status"]
 )
 
 unlocked = planner.get_unlocked_remaining()
@@ -185,21 +185,45 @@ with tab1:
             status = "🟢 UNLOCKED" if ready else "🔒 LOCKED (Missing Prereqs)"
             st.markdown(f"**{code}: {course.name}** ({course.credits} credits) — {status}")
             if course.prereqs:
-                missing = [p for p in course.prereqs
-                           if p not in planner.completed | planner.enrolled]
+                missing = [p for p in course.prereqs if p not in planner.completed]
                 if missing:
                     st.caption(f"Prerequisites: {', '.join(course.prereqs)} — missing: {', '.join(missing)}")
                 else:
                     st.caption(f"Prerequisites: {', '.join(course.prereqs)}")
 
-    st.subheader("Electives Left to Complete")
+    st.subheader("Electives Left to Choose from")
     if elec_req and elec_count >= elec_req:
         extra = elec_count - elec_req
         extra_note = f" (+{extra} extra)" if extra > 0 else ""
         st.success(f"🎉 Elective requirement met — {elec_count} electives{extra_note}, {elec_credits} credits.")
     else:
-        for i in range(elec_count, elec_req):
-            st.markdown(f"**ELECTIVE {i+1}** — ⏳ Remaining")
+        st.markdown(
+            f"*{elec_count}/{elec_req} electives selected — "
+            f"choose {elec_req - elec_count} more from the catalog below.*"
+        )
+
+        satisfied_now = planner.completed
+        for code, course in program.electives.items():
+            if code in planner.selected_electives:
+                continue
+
+            missing = [p for p in course.prereqs if p not in satisfied_now]
+            if missing:
+                status = "🔒 LOCKED (Missing Prereqs)"
+            else:
+                status = "🟢 UNLOCKED"
+
+            st.markdown(
+                f"**{code}: {course.name}** ({course.credits} credits) — {status}"
+            )
+            if course.prereqs:
+                if missing:
+                    st.caption(
+                        f"Prerequisites: {', '.join(course.prereqs)} — "
+                        f"missing: {', '.join(missing)}"
+                    )
+                else:
+                    st.caption(f"Prerequisites: {', '.join(course.prereqs)}")
 
 with tab2:
     st.subheader("Unlocked & Available Next Semester")
@@ -238,4 +262,3 @@ with tab3:
                 st.write(f"- **{code}**: {course.name} — *✅ Completed*")
             else:
                 st.write(f"- **{code}**: {course.name}")
-            
