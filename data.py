@@ -97,16 +97,16 @@ computerscience_required = {
     "CSCI 2670": Course("CSCI 2670", "Theory of Computation", 4, ["CSCI 2610"]),
     "CSCI 2720": Course("CSCI 2720", "Data Structures", 4, ["CSCI 2610", "CSCI 1302"]),
     "CSCI 4720": Course("CSCI 4720", "Computer Architecture", 4, ["CSCI 2670", "CSCI 1730"]),
-    "CSCI 4470": Course("CSCI 4470", "Algorithms", 4, ["CSCI 2670", "CSCI 2725"]),
+    "CSCI 4470": Course("CSCI 4470", "Algorithms", 4, ["CSCI 2670", "CSCI 2720"]),
     "CSCI 4050": Course("CSCI 4050", "Software Engineering", 4, ["CSCI 2720"]),
-    "CSCI 4760": Course("CSCI 4760", "Computer Networks", 4, ["CSCI 2670", "CSCI 2725"]),
+    "CSCI 4760": Course("CSCI 4760", "Computer Networks", 4, ["CSCI 2670", "CSCI 2720"]),
+    "CSCI 4XXX 1": Course("CSCI 4XXX", "Some other 4000 level CSCI class 1", 4, prereqs=[]),
+    "CSCI 4XXX 2": Course("CSCI 4XXX", "Some other 4000 level CSCI class 2", 4, prereqs=[]),
+    "CSCI 4XXX 3": Course("CSCI 4XXX", "Some other 4000 level CSCI class 3", 4, prereqs=[]),
+    "CSCI 4XXX 4": Course("CSCI 4XXX", "Some other 4000 level CSCI class 4", 4, prereqs=[]),
 }
 
 computerscience_electives = {
-    "CSCI 4XXX 1": Course("CSCI 4XXX", "Some 4000 level CSCI class 1", 4, prereqs=[]),
-    "CSCI 4XXX 2": Course("CSCI 4XXX", "Some 4000 level CSCI class 2", 4, prereqs=[]),
-    "CSCI 4XXX 3": Course("CSCI 4XXX", "Some 4000 level CSCI class 3", 4, prereqs=[]),
-    "CSCI 4XXX 4": Course("CSCI 4XXX", "Some 4000 level CSCI class 4", 4, prereqs=[]),
     "CSCI 2150": Course("CSCI 2150", "Introduction to Computational Science", 4,
                         prereqs=[]),
     "CSCI 4150": Course("CSCI 4150", "Numerical Simulations in Science and Engineering", 4,
@@ -142,7 +142,7 @@ computerscience_major = ComputingProgram(
      name="B.S. in Computer Science",
      courses=computerscience_required,
      electives=computerscience_electives,
-     electives_required=8,
+     electives_required=4,
 )
 
 PROGRAMS = {
