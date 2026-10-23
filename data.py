@@ -26,7 +26,7 @@ datascience_required = {
     "STAT 4220": Course("STAT 4220", "Applied Experimental Designs", 3, ["STAT 4230"]),
     "CSCI 4380": Course("CSCI 4380", "Data Mining", 4, ["CSCI 2725"]),
     "STAT 4530": Course("STAT 4530", "Statistical Inference for Data Scientists", 3, ["CSCI 3360", "STAT 4510"]),
-    "STAT 5030": Course("STAT 5030", "Statistical Methods / Consulting", 3, ["STAT 4230"]),
+    "STAT 5030": Course("STAT 5030", "Data Sciece Capstone Course", 3, ["STAT 4230"]),
 }
 
 datascience_electives = {
