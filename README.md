@@ -1,6 +1,8 @@
-# **Course Planner and Progress Visualizer for UGA's Computing Programs (Live)**
+# **Course Planner and Progress Visualizer for UGA's Computing Programs (Live 🎉)**
 
-I love my major, but I'm always debating on what minors I want to take so my course plan keeps changing. However, UGA's course planning website (DEGREEWORKS) is pretty janky and I can never tell  how much progress I've made, so I'm always irritated every time I have to use it. I've only included the two majors within UGA's College of Computing in the prototype, just to be able to sort and plan out my logic. In the full stack app, ALL of UGA's computing and computing-adjacent programs are incorporated to be inclusive for all students! This project was created to save me time, because I'm tired of using Degreeworks, but I hope it can help a few others too down the line.
+I love my major, but I'm always debating on what minors I want to take so my course plan keeps changing. However, UGA's course planning website (DEGREEWORKS) is pretty janky and I can never tell  how much progress I've made, so I'm always irritated every time I have to use it.
+
+I've only included the two majors within UGA's College of Computing in the prototype, just to be able to sort and plan out my logic. In the full stack app, ALL of UGA's computing and computing-adjacent programs are incorporated to be inclusive for all students! This project was created to save me time, because I'm tired of using Degreeworks, but I hope it can help a few others too down the line.
 
 ---
 
